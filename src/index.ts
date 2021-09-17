@@ -1,12 +1,22 @@
-import fastify from 'fastify';
-import fetch from 'node-fetch';
 import { URL } from 'url';
+import fastify from 'fastify';
+import fastifyRateLimit from 'fastify-rate-limit';
+import fetch from 'node-fetch';
 
-const server = fastify();
+// get configuration from environment variables
 const port = process.env.SERVER_PORT || 8080;
 const host = process.env.SERVER_HOST || '0.0.0.0';
+const rateLimitNumber = process.env.RATE_LIMIT_NUMBER || 60;
+const rateLimitPeriod = process.env.RATE_LIMIT_PERIOD || '5 minutes';
 const allowedHostnamesString = process.env.ALLOWED_HOSTNAMES || 'ludovic-muller.fr';
 const allowedHostnames = allowedHostnamesString.split(',').map((h) => h.trim());
+
+// initialize server and add some rate-limiting
+const server = fastify();
+server.register(fastifyRateLimit, {
+  max: parseInt(`${rateLimitNumber}`, 10),
+  timeWindow: rateLimitPeriod,
+});
 
 const checkUrl = (url?: string) => {
   if (!url) {
