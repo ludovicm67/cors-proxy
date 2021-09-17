@@ -94,9 +94,14 @@ server.post<{ Querystring: { url?: string }, Body: any, Headers: any }>('/', asy
     return response.code(400).send(`${urlValidation.message}\n`);
   }
 
+  let { body } = request;
+  if (body && typeof body === 'object') {
+    body = JSON.stringify(body);
+  }
+
   // do the request
   const req = await fetch(`${url}`, {
-    redirect: 'follow', method: 'POST', body: request.body, headers: cleanHeaders(request.headers),
+    redirect: 'follow', method: 'POST', body, headers: cleanHeaders(request.headers),
   });
   if (!req.ok) {
     return response.code(req.status).send(req.body);
