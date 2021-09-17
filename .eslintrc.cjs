@@ -14,5 +14,5 @@ module.exports = {
   rules: {
     "no-console": "off"
   },
-  ignorePatterns: ["dist", ".eslintrc.js"],
+  ignorePatterns: ["dist", ".eslintrc.cjs"],
 };

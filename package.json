@@ -5,10 +5,11 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p .",
-    "dev": "ts-node-dev --respawn -- src/index.ts",
+    "dev": "nodemon --watch src --ext js,ts,tsx --exec 'npm run start'",
     "start": "npm run build && node ./dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ludovicm67/cors-proxy.git"
@@ -29,12 +30,17 @@
   },
   "homepage": "https://github.com/ludovicm67/cors-proxy#readme",
   "devDependencies": {
+    "@types/node": "^16.9.2",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
     "eslint": "^7.29.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-plugin-import": "^2.23.4",
-    "ts-node-dev": "^1.1.6",
-    "typescript": "^4.3.4"
+    "nodemon": "^2.0.12",
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "fastify": "^3.21.2",
+    "node-fetch": "^3.0.0"
   }
 }

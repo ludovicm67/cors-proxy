@@ -1,15 +1,19 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
+    "module": "ES2020",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
     "rootDir": "./src",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "downlevelIteration": true,
     "lib": ["es2020", "dom"]
+  },
+  "parserOptions": {
+    "extraFileExtensions": [".cjs"]
   }
 }
