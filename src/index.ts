@@ -1,5 +1,6 @@
 import { URL } from 'url';
 import fastify from 'fastify';
+import fastifyCors from 'fastify-cors';
 import fastifyRateLimit from 'fastify-rate-limit';
 import fetch from 'node-fetch';
 
@@ -13,6 +14,7 @@ const allowedHostnames = allowedHostnamesString.split(',').map((h) => h.trim());
 
 // initialize server and add some rate-limiting
 const server = fastify();
+server.register(fastifyCors);
 server.register(fastifyRateLimit, {
   max: parseInt(`${rateLimitNumber}`, 10),
   timeWindow: rateLimitPeriod,
@@ -42,6 +44,7 @@ const checkUrl = (url?: string) => {
 // health check endpoint
 server.get('/healthz', async () => 'OK\n');
 
+// support for GET requests
 server.get<{ Querystring: { url?: string } }>('/', async (request, response) => {
   const { url } = request.query;
   const urlValidation = checkUrl(url);
@@ -57,6 +60,24 @@ server.get<{ Querystring: { url?: string } }>('/', async (request, response) => 
   return req.body;
 });
 
+// support for POST requests
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+server.post<{ Querystring: { url?: string }, Body: any }>('/', async (request, response) => {
+  const { url } = request.query;
+  const urlValidation = checkUrl(url);
+  if (!urlValidation.success) {
+    return response.code(400).send(`${urlValidation.message}\n`);
+  }
+
+  const req = await fetch(`${url}`, { redirect: 'follow', method: 'POST', body: request.body });
+  if (!req.ok) {
+    return response.code(req.status).send(`${req.body}\n`);
+  }
+
+  return req.body;
+});
+
+// start the server
 server.listen(port, host, (err, address) => {
   if (err) {
     console.error(err);
