@@ -20,6 +20,12 @@ server.register(fastifyRateLimit, {
   timeWindow: rateLimitPeriod,
 });
 
+/**
+ * Check if the URL is valid and if it can be proxied.
+ *
+ * @param url The URL to check.
+ * @returns Informations about the URL.
+ */
 const checkUrl = (url?: string) => {
   if (!url) {
     return {
@@ -41,20 +47,39 @@ const checkUrl = (url?: string) => {
   };
 };
 
+/**
+ * Remove some headers.
+ *
+ * @param headers List of all headers.
+ * @returns List of cleaned headers.
+ */
+const cleanHeaders = (headers?: Record<string, string>) => {
+  if (!headers) {
+    return headers;
+  }
+
+  return Object.fromEntries(Object.entries(headers).filter((e) => {
+    const key = `${e[0]}`.toLocaleLowerCase();
+    return !['host'].includes(key);
+  }));
+};
+
 // health check endpoint
 server.get('/healthz', async () => 'OK\n');
 
 // support for GET requests
-server.get<{ Querystring: { url?: string } }>('/', async (request, response) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+server.get<{ Querystring: { url?: string }, Headers: any }>('/', async (request, response) => {
   const { url } = request.query;
   const urlValidation = checkUrl(url);
   if (!urlValidation.success) {
     return response.code(400).send(`${urlValidation.message}\n`);
   }
 
-  const req = await fetch(`${url}`, { redirect: 'follow' });
+  // do the request
+  const req = await fetch(`${url}`, { redirect: 'follow', headers: cleanHeaders(request.headers) });
   if (!req.ok) {
-    return response.code(req.status).send(`${req.body}\n`);
+    return response.code(req.status).send(req.body);
   }
 
   return req.body;
@@ -62,16 +87,19 @@ server.get<{ Querystring: { url?: string } }>('/', async (request, response) => 
 
 // support for POST requests
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-server.post<{ Querystring: { url?: string }, Body: any }>('/', async (request, response) => {
+server.post<{ Querystring: { url?: string }, Body: any, Headers: any }>('/', async (request, response) => {
   const { url } = request.query;
   const urlValidation = checkUrl(url);
   if (!urlValidation.success) {
     return response.code(400).send(`${urlValidation.message}\n`);
   }
 
-  const req = await fetch(`${url}`, { redirect: 'follow', method: 'POST', body: request.body });
+  // do the request
+  const req = await fetch(`${url}`, {
+    redirect: 'follow', method: 'POST', body: request.body, headers: cleanHeaders(request.headers),
+  });
   if (!req.ok) {
-    return response.code(req.status).send(`${req.body}\n`);
+    return response.code(req.status).send(req.body);
   }
 
   return req.body;
