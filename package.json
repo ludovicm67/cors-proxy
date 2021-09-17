@@ -1,0 +1,40 @@
+{
+  "name": "typescript-project",
+  "version": "0.0.1",
+  "description": "Template for a new TypeScript project",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p .",
+    "dev": "ts-node-dev --respawn -- src/index.ts",
+    "start": "npm run build && node ./dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ludovicm67/ts-app-template.git"
+  },
+  "keywords": [
+    "typescript",
+    "starter",
+    "project",
+    "template"
+  ],
+  "author": {
+    "name": "Ludovic Muller",
+    "url": "https://ludovic-muller.fr/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ludovicm67/ts-app-template/issues"
+  },
+  "homepage": "https://github.com/ludovicm67/ts-app-template#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
+    "eslint": "^7.29.0",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-plugin-import": "^2.23.4",
+    "ts-node-dev": "^1.1.6",
+    "typescript": "^4.3.4"
+  }
+}
