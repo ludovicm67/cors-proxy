@@ -1,7 +1,7 @@
 {
-  "name": "typescript-project",
-  "version": "0.0.1",
-  "description": "Template for a new TypeScript project",
+  "name": "cors-proxy",
+  "version": "0.1.0",
+  "description": "CORS proxy",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p .",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ludovicm67/ts-app-template.git"
+    "url": "git+https://github.com/ludovicm67/cors-proxy.git"
   },
   "keywords": [
     "typescript",
@@ -25,9 +25,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ludovicm67/ts-app-template/issues"
+    "url": "https://github.com/ludovicm67/cors-proxy/issues"
   },
-  "homepage": "https://github.com/ludovicm67/ts-app-template#readme",
+  "homepage": "https://github.com/ludovicm67/cors-proxy#readme",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
